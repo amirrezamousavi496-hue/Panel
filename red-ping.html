@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RED PING</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{--bg:#0a0a0a;--card:#161616;--in:#242424;--line:#2a2a2a;--tx:#e8e8e8;--mu:#8a8a8a;--red:#ff2b2b;--red2:#7a1212;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a0a0a;--card:#161616}}
+:root[data-theme="dark"]{--bg:#0a0a0a;--card:#161616}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Vazirmatn,Tahoma,sans-serif;font-size:15px;min-height:100vh}
+h1{margin:0 0 18px;text-align:center;font-size:26px;font-weight:500;color:var(--red);letter-spacing:1px;direction:ltr}
+h3{margin:0 0 6px;font-size:17px;font-weight:500}
+.wrap{max-width:560px;margin:0 auto;padding:16px}
+.box{max-width:360px;margin:12vh auto 0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:22px 18px}
+input{width:100%;background:var(--in);border:1px solid transparent;border-radius:6px;padding:11px 12px;color:var(--tx);font:inherit;margin-bottom:10px;outline:0}
+input:focus{border-color:var(--red)}
+button{font:inherit;cursor:pointer;border:0;border-radius:6px;padding:10px 14px;color:#fff;background:var(--red);font-weight:500}
+button:focus-visible,input:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.w{width:100%}.b2{background:var(--in);color:var(--tx);margin-top:8px}
+.o{background:#2a0d0d;color:#ff6b6b;border:1px solid var(--red)}
+.dg{background:var(--red2)}
+.sm{padding:6px 10px;font-size:13px}
+.mu{color:var(--mu);font-size:13px;margin:0 0 12px}
+.err{color:#ff6b6b;font-size:13px;min-height:18px;margin:-2px 0 8px}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--card);border-radius:8px;padding:10px;margin-bottom:12px;flex-wrap:wrap}
+.row{background:var(--card);border-radius:8px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.row small{color:var(--mu);display:block;font-size:12px}
+.pr{width:96px;font-size:11px;color:var(--mu)}
+.pr div{height:5px;background:var(--line);border-radius:3px;margin-bottom:3px}
+.pr i{display:block;height:5px;background:var(--red);border-radius:3px}
+.acts{display:flex;gap:6px;margin-top:8px}
+.st{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.st div{background:var(--card);border:1px solid #3a1212;border-radius:8px;padding:10px;font-size:13px;color:var(--mu)}
+.st b{display:block;color:#fff;font-size:18px;font-weight:500}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;padding:16px;z-index:9}
+.md{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;width:100%;max-width:360px;max-height:90vh;overflow:auto}
+.cf{display:flex;gap:8px;justify-content:center;margin-top:14px}
+.em{text-align:center;color:var(--mu);padding:28px 8px;font-size:14px}
+#t{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--red);color:#fff;padding:9px 16px;border-radius:6px;font-size:14px;display:none;z-index:10}
+.s{display:flex;gap:6px}.s input{margin:0}
+.sup{text-align:center;padding:18px 0 28px}
+.sup a{display:inline-block;color:var(--red);text-decoration:none;border:1px solid var(--red);border-radius:6px;padding:8px 20px;font-size:14px}
+</style>
+</head>
+<body>
+<div id="app"></div><div class="sup"><a href="https://t.me/Redvp1268" target="_blank" rel="noopener">پشتیبانی</a></div><div id="m"></div><div id="t"></div>
+<script>
+const K='rp_panels';
+let panels=[],S=null,q='';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function load(){try{panels=JSON.parse(localStorage.getItem(K))||[]}catch(e){panels=[]}}
+function save(){try{localStorage.setItem(K,JSON.stringify(panels))}catch(e){}}
+function toast(x){const t=$('t');t.textContent=x;t.style.display='block';setTimeout(()=>t.style.display='none',2200)}
+function modal(h){$('m').innerHTML='<div class="ov" onclick="if(event.target===this)closeM()"><div class="md">'+h+'</div></div>';const i=$('m').querySelector('input');if(i)i.focus()}
+function closeM(){$('m').innerHTML=''}
+function cur(){return panels.find(p=>p.u===S.u)}
+function render(){$('app').innerHTML=!S?loginV():S.r==='a'?adminV():panelV();if(S&&S.r==='p')list()}
+
+function loginV(){return '<div class="box"><h1>RED PING</h1><input id="lu" dir="auto" placeholder="نام کاربری" autocomplete="off" onkeydown="if(event.key===\'Enter\')doLogin()"><input id="lp" type="password" placeholder="رمز عبور" onkeydown="if(event.key===\'Enter\')doLogin()"><div class="err" id="le"></div><button class="w" onclick="doLogin()">ورود</button></div>'}
+function doLogin(){
+  const u=$('lu').value.trim(),p=$('lp').value;
+  if(u==='REDPING'&&p==='Redping admin'){S={r:'a'};q='';return render()}
+  const f=panels.find(x=>x.u===u&&x.p===p);
+  if(f){S={r:'p',u:f.u};q='';return render()}
+  $('le').textContent='نام کاربری یا رمز عبور اشتباه است'
+}
+function out(){S=null;closeM();render()}
+
+function adminV(){
+  const rows=panels.length?panels.map(p=>'<div class="row"><div>'+esc(p.u)+'<small>'+p.users.length+' یوزر · ترافیک '+(p.tr||0)+' GB</small></div></div>').join(''):'<div class="em">هنوز پنلی نساخته‌اید. روی «ساخت پنل» بزنید.</div>';
+  return '<div class="wrap"><div class="bar"><b style="font-weight:500">حالت مدیریت</b><button class="dg sm" onclick="out()">خروج</button></div><div class="bar"><button onclick="newPanel()">ساخت پنل</button><button class="o" onclick="delPanelM()">حذف پنل</button><button class="o" onclick="chargeM()">شارژ / کاهش ترافیک</button></div><div class="st"><div>تعداد پنل‌ها<b>'+panels.length+'</b></div><div>مجموع یوزرها<b>'+panels.reduce((a,p)=>a+p.users.length,0)+'</b></div></div>'+rows+'</div>'
+}
+function newPanel(){modal('<h3>ساخت پنل</h3><p class="mu">یک نام کاربری و رمز عبور وارد کنید</p><input id="cu" dir="auto" placeholder="نام کاربری" autocomplete="off"><input id="cp" dir="auto" placeholder="رمز عبور" autocomplete="off"><div class="err" id="ce"></div><button class="w" onclick="addPanel()">ثبت پنل</button><button class="w b2" onclick="closeM()">بستن</button>')}
+function addPanel(){
+  const u=$('cu').value.trim(),p=$('cp').value.trim(),e=$('ce');
+  if(!u||!p)return e.textContent='نام کاربری و رمز عبور را وارد کنید';
+  if(u.toLowerCase()==='redping')return e.textContent='این نام کاربری رزرو شده است';
+  if(panels.some(x=>x.u===u))return e.textContent='این نام کاربری قبلاً ثبت شده است';
+  panels.push({u,p,users:[]});save();closeM();render();toast('پنل ثبت شد')
+}
+function delPanelM(){modal('<h3>حذف پنل</h3><p class="mu">نام کاربری را وارد کنید</p><input id="du" dir="auto" placeholder="نام کاربری" autocomplete="off"><div class="err" id="de"></div><button class="w dg" onclick="delPanel()">حذف پنل</button><button class="w b2" onclick="closeM()">بستن</button>')}
+function delPanel(){
+  const u=$('du').value.trim();
+  if(!u)return $('de').textContent='نام کاربری را وارد کنید';
+  const i=panels.findIndex(x=>x.u===u);
+  if(i<0)return $('de').textContent='پنلی با این نام کاربری پیدا نشد';
+  panels.splice(i,1);save();closeM();render();toast('پنل حذف شد')
+}
+
+function chargeM(){modal('<h3>شارژ / کاهش ترافیک</h3><p class="mu">نام کاربری پنل و مقدار ترافیک را وارد کنید</p><input id="cu" dir="auto" placeholder="نام کاربری" autocomplete="off"><input id="cg" type="number" min="1" placeholder="مقدار ترافیک (GB)"><div class="err" id="ce"></div><button class="w" onclick="charge(1)">شارژ ترافیک</button><button class="w dg" style="margin-top:8px" onclick="charge(-1)">کاهش ترافیک</button><button class="w b2" onclick="closeM()">بستن</button>')}
+function charge(sg){
+  const u=$('cu').value.trim(),g=parseFloat($('cg').value),e=$('ce');
+  if(!u)return e.textContent='نام کاربری را وارد کنید';
+  const p=panels.find(x=>x.u===u);
+  if(!p)return e.textContent='پنلی با این نام کاربری پیدا نشد';
+  if(!(g>0))return e.textContent='مقدار ترافیک را به‌صورت عدد وارد کنید';
+  if(sg===-1&&g>rem(p))return e.textContent='بیشتر از ترافیک باقی‌مانده ('+rem(p)+' GB) نمی‌شود کم کرد';
+  p.tr=Math.round(((p.tr||0)+g*(sg||1))*100)/100;save();closeM();render();toast(sg===-1?'ترافیک کم شد':'ترافیک شارژ شد')
+}
+function panelV(){
+  const p=cur();
+  return '<div class="wrap"><div class="bar"><b style="font-weight:500">'+esc(p.u)+'</b><button class="dg sm" onclick="out()">خروج</button></div><div class="st"><div>تعداد کاربران<b>'+p.users.length+'</b></div><div>حجم مصرفی کل<b>'+p.users.reduce((a,x)=>a+x.used,0)+' از '+(p.tr||0)+' GB</b></div><div>ترافیک باقی‌مانده<b>'+rem(p)+' GB</b></div></div><div class="bar"><button onclick="newUser()">ساخت یوزر</button><div class="s" style="flex:1;min-width:160px"><input id="sq" dir="auto" placeholder="جستجوی یوزرنیم یا آیدی عددی" value="'+esc(q)+'" oninput="q=this.value;list()"><button class="b2 sm" style="margin:0" onclick="q=\'\';$(\'sq\').value=\'\';list()" aria-label="پاک کردن جستجو">✕</button></div></div><div id="list"></div></div>'
+}
+function list(){
+  const p=cur(),k=q.trim().toLowerCase();
+  const r=p.users.map((x,i)=>({x,i})).filter(({x})=>!k||x.u.toLowerCase().includes(k)||String(x.tg||'').includes(k));
+  $('list').innerHTML=r.length?r.map(({x,i})=>{
+    const pc=x.gb?Math.min(100,Math.round(x.used/x.gb*100)):0;
+    return '<div class="row" style="flex-wrap:wrap'+(x.off?';opacity:.6':'')+'"><div>'+esc(x.u)+'<small>'+esc(x.a)+' · '+(x.off?'<span style="color:#ff6b6b">غیرفعال</span>':'فعال')+' · '+(x.mo?x.mo+' ماه':'زمان نامحدود')+' · تعداد کاربر: '+(x.cn||2)+'</small></div><div class="pr"><div><i style="width:'+pc+'%"></i></div>'+x.used+' از '+(x.gb||'نامحدود')+' GB</div><div class="acts" style="width:100%"><button class="sm" onclick="ed('+i+')">ویرایش</button><button class="sm" onclick="info('+i+')">اطلاعات</button><button class="sm" onclick="chU('+i+')">شارژ</button><button class="o sm" onclick="tog('+i+')">'+(x.off?'فعال کردن':'غیرفعال')+'</button><button class="o sm" onclick="ask(\'r\','+i+')">ریست حجم</button><button class="dg sm" onclick="ask(\'d\','+i+')">حذف</button></div></div>'
+  }).join(''):'<div class="em">'+(p.users.length?'یوزری با این مشخصات پیدا نشد.':'هنوز یوزری ندارید. روی «ساخت یوزر» بزنید.')+'</div>'
+}
+function tog(i){const x=cur().users[i];x.off=!x.off;save();render();toast(x.off?'یوزر غیرفعال شد':'یوزر فعال شد')}
+function ed(i){const x=cur().users[i];modal('<h3>ویرایش یوزر</h3><label style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><input id="es" type="checkbox" style="width:auto;margin:0"'+(x.off?'':' checked')+'>فعال</label><div class="mu" style="margin:0 0 4px">یوزرنیم</div><input value="'+esc(x.u)+'" disabled><div class="mu" style="margin:0 0 4px">نام مستعار</div><input id="ea" dir="auto" value="'+esc(x.a)+'"><div class="mu" style="margin:0 0 4px">حجم (GB)، خالی یعنی نامحدود</div><input id="eg" type="number" min="0" value="'+(x.gb||'')+'"><div class="mu" style="margin:0 0 4px">مدت (ماه)، خالی یعنی نامحدود</div><input id="em" type="number" min="0" value="'+(x.mo||'')+'"><div class="mu" style="margin:0 0 4px">تعداد کاربر</div><input id="en" type="number" min="1" value="'+(x.cn||2)+'"><div class="mu" style="margin:0 0 4px">آیدی عددی تلگرام</div><input id="et" inputmode="numeric" value="'+esc(x.tg||'')+'"><div class="err" id="ee"></div><button class="w" onclick="edGo('+i+')">ذخیره</button><button class="w b2" onclick="closeM()">بستن</button>')}
+function edGo(i){
+  const p=cur(),x=p.users[i],e=$('ee'),tg=$('et').value.trim();
+  const gb=parseFloat($('eg').value)||0,mo=parseFloat($('em').value)||0,cn=parseInt($('en').value)||2;
+  if(tg&&!/^\d+$/.test(tg))return e.textContent='آیدی تلگرام باید عدد باشد';
+  if(gb-(x.gb||0)>rem(p))return e.textContent='ترافیک پنل کافی نیست. باقی‌مانده: '+rem(p)+' GB';
+  x.a=$('ea').value.trim()||'new';x.gb=gb;x.mo=mo;x.cn=cn;x.tg=tg;x.off=!$('es').checked;
+  save();closeM();render();toast('ذخیره شد')
+}
+function lb(t){return '<div class="mu" style="margin:0 0 4px">'+t+'</div>'}
+function rem(p){return Math.round(((p.tr||0)-p.users.reduce((a,x)=>a+(x.gb||0),0))*100)/100}
+function chU(i){const x=cur().users[i];modal('<h3>شارژ '+esc(x.u)+'</h3><p class="mu">مقدار ترافیک (GB) را وارد کنید. باقی‌مانده پنل: '+rem(cur())+' GB</p><input id="cg" type="number" min="1" placeholder="مقدار ترافیک (GB)"><div class="err" id="ce"></div><button class="w" onclick="chUGo('+i+')">شارژ</button><button class="w b2" onclick="closeM()">بستن</button>')}
+function chUGo(i){
+  const p=cur(),g=parseFloat($('cg').value),e=$('ce');
+  if(!(g>0))return e.textContent='مقدار ترافیک را به‌صورت عدد وارد کنید';
+  if(!p.users[i].gb)return e.textContent='این یوزر نامحدود است';
+  if(g>rem(p))return e.textContent='ترافیک پنل کافی نیست. باقی‌مانده: '+rem(p)+' GB';
+  p.users[i].gb=Math.round(((p.users[i].gb||0)+g)*100)/100;save();closeM();render();toast('ترافیک یوزر شارژ شد')
+}
+const HOST='example.com',SUB='https://example.com/sub/';
+function ids(x){if(!x.tk){x.tk=rnd()+rnd();try{x.id=crypto.randomUUID()}catch(e){x.id='6f1d2c3a-0000-4000-8000-'+(rnd()+'abcdef012345').toLowerCase().replace(/[^0-9a-f]/g,'0').slice(0,12)}save()}return x}
+function subL(x){return x.sl||SUB+ids(x).tk}
+function rb(x){const c=x.cf,n='RED PING-'+x.u;try{if(c.startsWith('vmess://')){const j=JSON.parse(atob(c.slice(8)));j.ps=n;return 'vmess://'+btoa(JSON.stringify(j))}}catch(e){return c}const i=c.indexOf('#');return (i<0?c:c.slice(0,i))+'#'+encodeURIComponent(n)}
+function cfg(x){if(x.cf)return rb(x);return 'vless://'+ids(x).id+'@'+HOST+':443?type=ws&security=tls&path=%2F#RED%20PING-'+encodeURIComponent(x.u)}
+function cp(t){const ok=()=>toast('کپی شد'),fb=()=>{const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();try{document.execCommand('copy');ok()}catch(e){toast('کپی نشد')}a.remove()};try{navigator.clipboard.writeText(t).then(ok,fb)}catch(e){fb()}}
+function info(i){const u=cur().users[i];modal('<h3>اطلاعات '+esc(u.u)+'</h3><div style="display:grid;gap:6px;margin-top:12px"><button onclick="cp(subL(cur().users['+i+']))">کپی لینک ساب V2RAY</button><button onclick="qr('+i+',0)">نمایش QR لینک ساب V2RAY</button><button onclick="cp(cfg(cur().users['+i+']))">کپی کانفیگ V2RAY</button><button onclick="shw('+i+')">نمایش کانفیگ V2RAY</button><button onclick="qr('+i+',1)">نمایش QR کانفیگ V2RAY</button><button class="b2" style="margin:0" onclick="closeM()">بستن</button></div>')}
+function qr(i,k){const u=cur().users[i];modal('<h3>'+(k?'QR کانفیگ V2RAY':'QR لینک ساب V2RAY')+'</h3><div id="qc" style="background:#fff;padding:12px;border-radius:8px;display:flex;justify-content:center;margin-top:10px"></div><button class="w b2" onclick="info('+i+')">بازگشت</button>');try{new QRCode($('qc'),{text:k?cfg(u):subL(u),width:220,height:220,correctLevel:QRCode.CorrectLevel.L})}catch(e){$('qc').textContent='QR ساخته نشد'}}
+function shw(i){const u=cur().users[i];modal('<h3>کانفیگ V2RAY</h3><textarea readonly dir="ltr" style="width:100%;height:120px;background:var(--in);color:var(--tx);border:0;border-radius:6px;padding:10px;font-size:12px;margin-top:10px">'+esc(cfg(u))+'</textarea><button class="w" style="margin-top:8px" onclick="cp(cfg(cur().users['+i+']))">کپی کانفیگ</button><button class="w b2" onclick="info('+i+')">بازگشت</button>')}
+function rnd(){const c='abcdefghijklmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<10;i++)s+=c[Math.floor(Math.random()*c.length)];return s}
+let bm=0;
+function newUser(){
+  bm=0;
+  modal('<h3>ساخت یوزر جدید</h3><div style="display:flex;gap:8px;margin-bottom:12px"><button id="m0" class="sm" style="flex:1" onclick="setBm(0)">ساخت تکی</button><button id="m1" class="o sm" style="flex:1" onclick="setBm(1)">ساخت تعدادی</button></div>'
+  +'<div id="sg">'+lb('یوزرنیم')+'<input id="nu" dir="auto" value="'+rnd()+'" placeholder="یوزرنیم"></div>'
+  +'<div id="bk" style="display:none">'+lb('تعداد ساخت (حتماً وارد کنید)')+'<input id="nb" type="number" min="1" max="200" placeholder="تعداد ساخت"><div class="mu">یوزرنیم‌ها خودکار و رندوم ساخته می‌شوند و قابل تغییر نیستند.</div></div>'
+  +lb('نام مستعار')+'<input id="na" dir="auto" value="new" placeholder="نام مستعار">'
+  +lb('حجم یا ترافیک (GB)، اگر وارد نشود بینهایت')+'<input id="ng" type="number" min="0" placeholder="بینهایت">'
+  +lb('مدت زمان (ماه)، اگر وارد نشود نامحدود')+'<input id="nm" type="number" min="0" placeholder="نامحدود">'
+  +lb('تعداد کاربر')+'<input id="nn" type="number" min="1" value="2" placeholder="تعداد کاربر">'
+  +'<div id="tgb">'+lb('آیدی عددی تلگرام')+'<input id="nt" inputmode="numeric" placeholder="آیدی عددی تلگرام"></div>'
+  +'<div class="err" id="ne"></div><button class="w" onclick="addUser()">ذخیره</button><button class="w b2" onclick="closeM()">بستن</button>')
+}
+function setBm(v){bm=v;$('sg').style.display=v?'none':'';$('tgb').style.display=v?'none':'';$('bk').style.display=v?'':'none';$('m0').className=v?'o sm':'sm';$('m1').className=v?'sm':'o sm';$('ne').textContent=''}
+function addUser(){
+  const p=cur(),e=$('ne');
+  const gb=parseFloat($('ng').value)||0,mo=parseFloat($('nm').value)||0,cn=parseInt($('nn').value)||2,a=$('na').value.trim()||'new';
+  let names=[],tg='';
+  if(bm){
+    const n=parseInt($('nb').value);
+    if(!(n>=1))return e.textContent='تعداد ساخت را وارد کنید';
+    if(n>200)return e.textContent='حداکثر 200 یوزر در هر بار';
+    while(names.length<n){const r=rnd();if(!p.users.some(x=>x.u===r)&&!names.includes(r))names.push(r)}
+  }else{
+    const u=$('nu').value.trim();
+    if(!u)return e.textContent='یوزرنیم را وارد کنید';
+    if(p.users.some(x=>x.u===u))return e.textContent='این یوزرنیم قبلاً ثبت شده است';
+    tg=$('nt').value.trim();
+    if(tg&&!/^\d+$/.test(tg))return e.textContent='آیدی تلگرام باید عدد باشد';
+    names=[u];
+  }
+  if(gb*names.length>rem(p))return e.textContent='ترافیک پنل کافی نیست. باقی‌مانده: '+rem(p)+' GB';
+  names.forEach(u=>p.users.push({u,a,gb,mo,cn,used:0,tg}));
+  save();closeM();render();toast(names.length>1?names.length+' یوزر ساخته شد':'یوزر ساخته شد')
+}
+function ask(k,i){
+  const x=cur().users[i];
+  modal('<div style="text-align:center;line-height:1.9">آیا برای '+(k==='d'?'حذف':'ریست حجم')+' <b>'+esc(x.u)+'</b> مطمئن هستید؟</div><div class="cf"><button onclick="act(\''+k+'\','+i+')">بله</button><button class="b2" style="margin:0" onclick="closeM()">خیر</button></div>')
+}
+function act(k,i){
+  const p=cur();
+  if(k==='d')p.users.splice(i,1);else p.users[i].used=0;
+  save();closeM();render();toast(k==='d'?'یوزر حذف شد':'حجم ریست شد')
+}
+load();render();
+</script>
+</body>
+</html>
